@@ -11,7 +11,7 @@
 
 2. Клонируйте репозиторий:
    ```bash
-   git clone 
+   git clone https://github.com/Godemd/GitWeb.git
    ```
 3. Установите зависимости:
    ```bash
