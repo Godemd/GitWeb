@@ -7,7 +7,7 @@
 ## Структура проекта
 
 ```bash
-Mahiru_Website/
+GitWeb/
 │
 ├── data/
 │   └── categories.json   # JSON файл с данными
