@@ -40,7 +40,7 @@ GitWeb/
 
 1. Склонируйте репозиторий или скачайте проект:
    ```bash
-  https://github.com/Godemd/GitWeb.git
+    https://github.com/Godemd/GitWeb.git
    ```
 
 2. Перейдите в директорию проекта:
