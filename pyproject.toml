@@ -3,7 +3,7 @@
 name = "gitweb"
 version = "0.1.0"
 description = ""
-authors = ["name <email>"]
+authors = ["Godemd<dandigrom1@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
