@@ -13,4 +13,5 @@ class BlogAdmin(admin.ModelAdmin):
     ordering = ("-created_at",)
     readonly_fields = ("view_count",)
 
+
 # Register your models here.
