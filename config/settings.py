@@ -30,6 +30,27 @@ SECRET_KEY = os.getenv("SECRET_KEY_DJANGO")
 DEBUG = bool(os.getenv("DEBUG"))
 
 ALLOWED_HOSTS = []
+#Custom user model
+
+AUTH_USER_MODEL = 'accounts.User'
+
+LOGIN_REDIRECT_URL = 'home'
+
+LOGOUT_REDIRECT_URL = 'home'
+
+LOGIN_URL = 'login'
+
+
+# email settings
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_USE_TLS = eval(os.getenv("EMAIL_USE_TLS"))
+EMAIL_USE_SSL = eval(os.getenv("EMAIL_USE_SSL"))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 # Application definition
@@ -37,6 +58,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     "catalog",
     "blog",
+    "accounts",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
