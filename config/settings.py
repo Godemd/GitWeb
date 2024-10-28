@@ -10,9 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-from dotenv import load_dotenv
 import os
+from pathlib import Path
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -30,20 +31,20 @@ SECRET_KEY = os.getenv("SECRET_KEY_DJANGO")
 DEBUG = bool(os.getenv("DEBUG"))
 
 ALLOWED_HOSTS = []
-#Custom user model
+# Custom user model
 
-AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = "accounts.User"
 
-LOGIN_REDIRECT_URL = 'home'
+LOGIN_REDIRECT_URL = "home"
 
-LOGOUT_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = "home"
 
-LOGIN_URL = 'login'
+LOGIN_URL = "login"
 
 
 # email settings
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = os.getenv("EMAIL_HOST")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = eval(os.getenv("EMAIL_USE_TLS"))

@@ -1,8 +1,12 @@
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, UpdateView
+
+from blog.models import BlogPost as Blog
+from catalog.models import Product
 
 from .forms import LoginForm, ProfileForm, RegisterForm
 from .models import User
@@ -35,7 +39,10 @@ class ProfileView(DetailView):
         return self.request.user
 
     def get_context_data(self, **kwargs):
+
         context = super().get_context_data(**kwargs)
+        context["products"] = Product.objects.filter(owner=self.request.user)
+        context["blogs"] = Blog.objects.filter(owner=self.request.user)
         return context
 
 
@@ -48,6 +55,7 @@ class ProfileEditView(UpdateView):
 
     def form_valid(self, form):
         form.save()
+        messages.success(self.request, "Профиль успешно обновлён!")
         return super().form_valid(form)
 
     def get_object(self):
@@ -61,13 +69,14 @@ class ProfileDeleteView(DeleteView):
     def delete(self, request, *args, **kwargs):
         user = self.request.user
         user.delete()
+        messages.success(self.request, "Профиль успешно удалён!")
         return super().delete(request, *args, **kwargs)
 
 
 def send_welcome_email(user: User):
-    subject = "Добро пожаловать в MahiruStore!"
+    subject = "Добро пожаловать в Store!"
     message = """
-    Спасибо, что присоединились к MahiruStore! Мы рады приветствовать вас в нашем сообществе.
+    Спасибо, что присоединились к Store! Мы рады приветствовать вас в нашем сообществе.
 
     Вы теперь можете наслаждаться всеми преимуществами нашего магазина, включая:
     - Просмотр и покупку самых популярных товаров в различных категориях.
@@ -78,11 +87,11 @@ def send_welcome_email(user: User):
     https://localhost:8000/catalogs
 
     Если у вас возникнут вопросы или нужна помощь, не стесняйтесь обращаться к нашей службе поддержки:
-    - Email: support@mahirustore.com
+    - Email: support@store.com
     - Телефон: +7(123)456-78-90
 
     С уважением,
-    Команда MahiruStore
+    Команда Store
     """
 
     # Email settings from settings.py should be configured
