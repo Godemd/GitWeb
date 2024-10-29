@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from .forms import ProductForm
+from .forms import ProductForm, ModeratorProductForm
 from .models import Category, Product
 
 
@@ -154,58 +154,29 @@ class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
         messages.success(self.request, "Продукт успешно удалён!")
         return super().delete(request, *args, **kwargs)
 
-
-class ProductUnpublishView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = "catalog.can_unpublish_product"
-
-    def has_permission(self) -> bool:
-        product = get_object_or_404(Product, pk=self.kwargs["pk"])
-        return super().has_permission() or self.request.user == product.owner
-
-    def post(self, request, pk) -> HttpResponse:
-        product = get_object_or_404(Product, pk=pk)
-        if product.is_published:
-            product.is_published = False
-            product.save()
-            messages.success(request, "Продукт снят с публикации.")
-        else:
-            messages.warning(request, "Продукт уже снят с публикации.")
-        return redirect("product", pk=pk)
-
-
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
-    form_class = ProductForm
     template_name = "catalog/product_form.html"
 
-    def get_success_url(self) -> str:
-        """
-        Возвращает URL для редиректа.
+    def get_form_class(self):
+        # Проверяем, является ли пользователь владельцем или имеет права на изменение продукта
+        if self.request.user == self.get_object().owner:
+            return ProductForm  # полная форма для владельцев и администраторов
+        elif self.request.user.has_perm('catalog.can_unpublish_product'):
+            return ModeratorProductForm # ограниченная форма для модераторов
+        else:
+            # Перенаправляем или возвращаем ошибку, если нет прав на редактирование
+            from django.core.exceptions import PermissionDenied
+            raise PermissionDenied("У вас нет прав для редактирования этого продукта")
 
-        Returns:
-            str:
-        """
+    def get_success_url(self) -> str:
         return reverse_lazy("product", kwargs={"pk": self.object.pk})
 
     def get_context_data(self, **kwargs) -> dict:
-        """
-        Возвращает контекст для шаблона.
-
-        Returns:
-            dict:
-        """
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         return context
 
     def form_valid(self, form) -> HttpResponse:
-        """
-        Обрабатывает валидацию формы.
-
-        Args:
-            form (ProductForm): _form_
-        Returns:
-            HttpResponse:
-        """
-        messages.success(self.request, "Продукт успeшно обновлён!")
+        messages.success(self.request, "Продукт успешно обновлён!")
         return super().form_valid(form)

@@ -97,3 +97,12 @@ class ProductForm(forms.ModelForm):
             FileExtensionValidator(allowed_extensions=["jpg", "png"], message="Неверное расширение файла"),
             file_size_validator,
         ]
+class ModeratorProductForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ["is_published"]
+
+    def __init__(self, *args, **kwargs):
+        super(ModeratorProductForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs["class"] = "form-check-input"
