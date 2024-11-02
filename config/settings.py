@@ -134,11 +134,17 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Cashe
+# settings.py
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379',
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379',  # Проверьте правильность порта и базы данных
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            # Опционально, можно указать пароль, если требуется
+            # 'PASSWORD': 'ваш_пароль'
+        }
     }
 }
 
